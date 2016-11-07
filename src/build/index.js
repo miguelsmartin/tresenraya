@@ -3,6 +3,7 @@
 
 var Cabecera = require('./Cabecera.jsx');
 var Tablero = require('./Tablero.jsx');
+var Boton = require('./Boton.jsx');
 
 var JUGADORX = "jugador 1 - las X";
 var JUGADOR0 = "jugador 2 - los 0";
@@ -14,7 +15,8 @@ var App = React.createClass({
   getInitialState: function getInitialState() {
     return {
       turno: JUGADORX,
-      valores: VALORES
+      valores: VALORES,
+      playingGame: true
     };
   },
 
@@ -22,26 +24,29 @@ var App = React.createClass({
     var valores = this.state.valores;
     var nuevoValor = this.state.turno === JUGADORX ? 'X' : '0';
     valores[numeroFila][numberoColumna] = nuevoValor;
-    var gameWinner = this.didFinish(this.state.turno, valores);
     this.setState({
       turno: this.state.turno === JUGADORX ? JUGADOR0 : JUGADORX,
       valores: this.state.valores
     });
+    var gameWinner = this.didFinish(this.state.turno, valores);
     if (gameWinner) {
       alert("Ganó el: " + gameWinner);
+      this.setState({
+        playingGame: false
+      });
     }
   },
-
+  //Función que comprueba si ganó algún usuario y lo devuelve
   didFinish: function didFinish(turno, valores) {
     var winner = null;
-    for (var f = 0; f < valores.length - 1; f++) {
+    for (var f = 0; f < valores.length; f++) {
       if (valores[f][0] == valores[f][1] && valores[f][0] == valores[f][2]) {
         if (valores[f][0] != '-') {
           winner = turno;
         }
       }
     }
-    for (var c = 0; c < valores[0].length - 1; c++) {
+    for (var c = 0; c < valores[0].length; c++) {
       if (valores[0][c] == valores[1][c] && valores[0][c] == valores[2][c]) {
         if (valores[0][c] != '-') {
           winner = turno;
@@ -60,19 +65,46 @@ var App = React.createClass({
     }
     return winner;
   },
+  nuevaPartidaClick: function nuevaPartidaClick() {
+    this.setState({
+      turno: JUGADORX,
+      valores: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
+      playingGame: true
+    });
+  },
   render: function render() {
     var texto = "Turno del " + this.state.turno;
     return React.createElement(
       'div',
       null,
       React.createElement(Cabecera, { texto: texto }),
-      React.createElement(Tablero, { valores: this.state.valores, manejadorTableroClick: this.appClick })
+      React.createElement(Tablero, { valores: this.state.valores, manejadorTableroClick: this.appClick, playingGame: this.state.playingGame }),
+      React.createElement(Boton, { nuevaPartidaClick: this.nuevaPartidaClick })
     );
   }
 });
 module.exports = App;
 
-},{"./Cabecera.jsx":2,"./Tablero.jsx":4}],2:[function(require,module,exports){
+},{"./Boton.jsx":2,"./Cabecera.jsx":3,"./Tablero.jsx":5}],2:[function(require,module,exports){
+"use strict";
+
+var Boton = React.createClass({
+  displayName: "Boton",
+
+  manejaClick: function manejaClick() {
+    this.props.nuevaPartidaClick();
+  },
+  render: function render() {
+    return React.createElement(
+      "button",
+      { className: "clickable", onClick: this.manejaClick },
+      "Nueva partida"
+    );
+  }
+});
+module.exports = Boton;
+
+},{}],3:[function(require,module,exports){
 "use strict";
 
 var Cabecera = React.createClass({
@@ -88,7 +120,7 @@ var Cabecera = React.createClass({
 });
 module.exports = Cabecera;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var casillaStyle = {
@@ -100,14 +132,14 @@ var Casilla = React.createClass({
   displayName: 'Casilla',
 
   casillaClick: function casillaClick() {
-    if (this.props.valor === "-") {
+    if (this.props.valor === "-" && this.props.playingGame) {
       this.props.manejadorClick(this.props.indiceFila, this.props.indiceColumna);
     }
   },
   render: function render() {
     return React.createElement(
       'button',
-      { style: casillaStyle, className: this.props.valor === "-" ? "clickable" : "no_clickable", onClick: this.casillaClick },
+      { style: casillaStyle, className: this.props.valor === "-" && this.props.playingGame ? "clickable" : "no_clickable", onClick: this.casillaClick },
       this.props.valor,
       ' '
     );
@@ -115,7 +147,7 @@ var Casilla = React.createClass({
 });
 module.exports = Casilla;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 var Casilla = require("./Casilla.jsx");
@@ -131,7 +163,7 @@ var Tablero = React.createClass({
       var fila = valoresFila.map(function (valor, indiceColumna) {
         var mykey = "" + indiceFila + indiceColumna;
         return React.createElement(Casilla, { valor: valor, indiceFila: indiceFila,
-          indiceColumna: indiceColumna, key: mykey, manejadorClick: this.tableroClick });
+          indiceColumna: indiceColumna, key: mykey, manejadorClick: this.tableroClick, playingGame: this.props.playingGame });
       }, this);
       return React.createElement(
         "div",
@@ -148,10 +180,10 @@ var Tablero = React.createClass({
 });
 module.exports = Tablero;
 
-},{"./Casilla.jsx":3}],5:[function(require,module,exports){
+},{"./Casilla.jsx":4}],6:[function(require,module,exports){
 "use strict";
 
 var App = require("./App.jsx");
 ReactDOM.render(React.createElement(App, null), document.getElementById('contenedor'));
 
-},{"./App.jsx":1}]},{},[5]);
+},{"./App.jsx":1}]},{},[6]);

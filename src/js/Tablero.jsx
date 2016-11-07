@@ -10,7 +10,7 @@ var Tablero = React.createClass({
        let mykey = "" + indiceFila + indiceColumna;
        return (
          <Casilla valor={valor} indiceFila={indiceFila}
-        indiceColumna={indiceColumna} key={mykey} manejadorClick={this.tableroClick}/>
+        indiceColumna={indiceColumna} key={mykey} manejadorClick={this.tableroClick} playingGame={this.props.playingGame}/>
        )
      }, this);
      return (<div>{fila}</div>)
