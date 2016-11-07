@@ -22,34 +22,43 @@ var App = React.createClass({
     var valores = this.state.valores;
     var nuevoValor = this.state.turno === JUGADORX ? 'X' : '0';
     valores[numeroFila][numberoColumna] = nuevoValor;
-    this.didFinish();
+    var gameWinner = this.didFinish(this.state.turno, valores);
     this.setState({
       turno: this.state.turno === JUGADORX ? JUGADOR0 : JUGADORX,
       valores: this.state.valores
     });
+    if (gameWinner) {
+      alert("Ganó el: " + gameWinner);
+    }
   },
 
-  didFinish: function didFinish() {
+  didFinish: function didFinish(turno, valores) {
     var winner = null;
-    for (var f = 0; i < valores.length; f++) {
-      if (valores[f][0] == valores[f][1] == valores[f][2]) {
-        winner = this.state.turno;
+    for (var f = 0; f < valores.length - 1; f++) {
+      if (valores[f][0] == valores[f][1] && valores[f][0] == valores[f][2]) {
+        if (valores[f][0] != '-') {
+          winner = turno;
+        }
       }
     }
-    for (var c; c < valores[0][0].length; c++) {
-      if (valores[0][c] == fila[1][c] == fila[2][c]) {
-        winner = this.state.turno;
+    for (var c = 0; c < valores[0].length - 1; c++) {
+      if (valores[0][c] == valores[1][c] && valores[0][c] == valores[2][c]) {
+        if (valores[0][c] != '-') {
+          winner = turno;
+        }
       }
     }
-    if (valores[0][0] == valores[1][1] == valores[2][2]) {
-      winner = this.state.turno;
+    if (valores[0][0] == valores[1][1] && valores[1][1] == valores[2][2]) {
+      if (valores[1][1] != '-') {
+        winner = turno;
+      }
     }
-    if (valores[2][0] == valores[1][1] == valores[0][2]) {
-      winner = this.state.turno;
+    if (valores[2][0] == valores[1][1] && valores[1][1] == valores[0][2]) {
+      if (valores[1][1] != '-') {
+        winner = turno;
+      }
     }
-    if (winner) {
-      alert("Terminado");
-    }
+    return winner;
   },
   render: function render() {
     var texto = "Turno del " + this.state.turno;
