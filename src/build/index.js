@@ -4,6 +4,7 @@
 var Cabecera = require('./Cabecera.jsx');
 var Tablero = require('./Tablero.jsx');
 var Boton = require('./Boton.jsx');
+var ContadorMov = require('./ContadorMov.jsx');
 
 var JUGADORX = "jugador 1 - las X";
 var JUGADOR0 = "jugador 2 - los 0";
@@ -16,7 +17,8 @@ var App = React.createClass({
     return {
       turno: JUGADORX,
       valores: VALORES,
-      playingGame: true
+      playingGame: true,
+      numberMov: 0
     };
   },
 
@@ -26,7 +28,8 @@ var App = React.createClass({
     valores[numeroFila][numberoColumna] = nuevoValor;
     this.setState({
       turno: this.state.turno === JUGADORX ? JUGADOR0 : JUGADORX,
-      valores: this.state.valores
+      valores: this.state.valores,
+      numberMov: this.state.numberMov + 1
     });
     var gameWinner = this.didFinish(this.state.turno, valores);
     if (gameWinner) {
@@ -69,7 +72,8 @@ var App = React.createClass({
     this.setState({
       turno: JUGADORX,
       valores: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
-      playingGame: true
+      playingGame: true,
+      numberMov: 0
     });
   },
   render: function render() {
@@ -78,6 +82,7 @@ var App = React.createClass({
       'div',
       null,
       React.createElement(Cabecera, { texto: texto }),
+      React.createElement(ContadorMov, { texto: this.state.numberMov }),
       React.createElement(Tablero, { valores: this.state.valores, manejadorTableroClick: this.appClick, playingGame: this.state.playingGame }),
       React.createElement(Boton, { nuevaPartidaClick: this.nuevaPartidaClick })
     );
@@ -85,7 +90,7 @@ var App = React.createClass({
 });
 module.exports = App;
 
-},{"./Boton.jsx":2,"./Cabecera.jsx":3,"./Tablero.jsx":5}],2:[function(require,module,exports){
+},{"./Boton.jsx":2,"./Cabecera.jsx":3,"./ContadorMov.jsx":5,"./Tablero.jsx":6}],2:[function(require,module,exports){
 "use strict";
 
 var Boton = React.createClass({
@@ -150,6 +155,22 @@ module.exports = Casilla;
 },{}],5:[function(require,module,exports){
 "use strict";
 
+var Contador = React.createClass({
+  displayName: "Contador",
+
+  render: function render() {
+    return React.createElement(
+      "p",
+      null,
+      this.props.texto
+    );
+  }
+});
+module.exports = Contador;
+
+},{}],6:[function(require,module,exports){
+"use strict";
+
 var Casilla = require("./Casilla.jsx");
 
 var Tablero = React.createClass({
@@ -180,10 +201,10 @@ var Tablero = React.createClass({
 });
 module.exports = Tablero;
 
-},{"./Casilla.jsx":4}],6:[function(require,module,exports){
+},{"./Casilla.jsx":4}],7:[function(require,module,exports){
 "use strict";
 
 var App = require("./App.jsx");
 ReactDOM.render(React.createElement(App, null), document.getElementById('contenedor'));
 
-},{"./App.jsx":1}]},{},[6]);
+},{"./App.jsx":1}]},{},[7]);

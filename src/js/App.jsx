@@ -1,6 +1,7 @@
 const Cabecera = require('./Cabecera.jsx');
 const Tablero = require('./Tablero.jsx');
 const Boton = require('./Boton.jsx');
+const ContadorMov = require('./ContadorMov.jsx');
 
 const JUGADORX = "jugador 1 - las X";
 const JUGADOR0 = "jugador 2 - los 0";
@@ -11,7 +12,8 @@ var App = React.createClass({
    return {
      turno: JUGADORX,
      valores: VALORES,
-     playingGame: true
+     playingGame: true,
+     numberMov: 0
    };
   },
 
@@ -21,14 +23,15 @@ var App = React.createClass({
    valores[numeroFila][numberoColumna] = nuevoValor;
    this.setState({
      turno: this.state.turno === JUGADORX ? JUGADOR0 : JUGADORX,
-     valores: this.state.valores
+     valores: this.state.valores,
+     numberMov: this.state.numberMov +1
    });
    var gameWinner = this.didFinish(this.state.turno, valores);
    if(gameWinner){
       alert("Ganó el: "+gameWinner);
       this.setState({
         playingGame: false
-      })
+      });
    }
  },
 //Función que comprueba si ganó algún usuario y lo devuelve
@@ -60,7 +63,8 @@ var App = React.createClass({
     this.setState({
       turno: JUGADORX,
       valores: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
-      playingGame: true
+      playingGame: true,
+      numberMov: 0
     });
   },
   render: function () {
@@ -68,8 +72,10 @@ var App = React.createClass({
    return (
      <div>
        <Cabecera texto={texto}/>
+       <ContadorMov texto={this.state.numberMov}/>
        <Tablero valores={this.state.valores} manejadorTableroClick={this.appClick} playingGame ={this.state.playingGame}/>
-       <Boton nuevaPartidaClick={this.nuevaPartidaClick}/>
+      <Boton nuevaPartidaClick={this.nuevaPartidaClick}/>
+
     </div>
    )
  }
