@@ -1,3 +1,5 @@
+var React = require('react');
+var ReactDOM = require('react-dom');
 var Boton = React.createClass({
  manejaClick: function(){
    this.props.nuevaPartidaClick();

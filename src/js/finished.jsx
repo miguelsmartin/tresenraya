@@ -1,3 +1,5 @@
+var React = require('react');
+var ReactDOM = require('react-dom');
 finished: function(){
   var winner = 0;
   for(var f =0; i < valores.length; f++){

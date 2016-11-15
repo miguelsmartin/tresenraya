@@ -1,3 +1,5 @@
+var React = require('react');
+var ReactDOM = require('react-dom');
 const Cabecera = require('./Cabecera.jsx');
 const Tablero = require('./Tablero.jsx');
 const Boton = require('./Boton.jsx');
@@ -32,9 +34,27 @@ var App = React.createClass({
       this.setState({
         playingGame: false
       });
+   } else if (this.state.numberMov >= 8) {
+     alert("Empate");
+     this.setState({
+       playingGame: false
+     });
    }
  },
 //Función que comprueba si ganó algún usuario y lo devuelve
+render: function () {
+ var texto = "Turno del " + this.state.turno;
+ return (
+   <div>
+     <Cabecera texto={texto} turno={this.state.turno} estado={this.state.playingGame} />
+     <ContadorMov texto={this.state.numberMov}/>
+     <Tablero valores={this.state.valores} manejadorTableroClick={this.appClick} playingGame ={this.state.playingGame}/>
+    <Boton nuevaPartidaClick={this.nuevaPartidaClick}/>
+
+  </div>
+ )
+},
+
  didFinish: function(turno, valores){
    var winner = null;
   for(var f =0; f < valores.length; f++){
@@ -59,25 +79,14 @@ var App = React.createClass({
   }
   return winner;
  },
-  nuevaPartidaClick: function(){
-    this.setState({
-      turno: JUGADORX,
-      valores: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
-      playingGame: true,
-      numberMov: 0
-    });
-  },
-  render: function () {
-   var texto = "Turno del " + this.state.turno;
-   return (
-     <div>
-       <Cabecera texto={texto}/>
-       <ContadorMov texto={this.state.numberMov}/>
-       <Tablero valores={this.state.valores} manejadorTableroClick={this.appClick} playingGame ={this.state.playingGame}/>
-      <Boton nuevaPartidaClick={this.nuevaPartidaClick}/>
 
-    </div>
-   )
+ nuevaPartidaClick: function(){
+   this.setState({
+     turno: JUGADORX,
+     valores: [['-', '-', '-'], ['-', '-', '-'], ['-', '-', '-']],
+     playingGame: true,
+     numberMov: 0
+   });
  }
 });
 module.exports = App;
