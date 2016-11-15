@@ -4,7 +4,7 @@ var Contador = React.createClass({
  render: function () {
    return (
      <p>
-      Numero de movimientos: {this.props.texto}
+      Número de movimientos: {this.props.texto}
     </p>
    )
  }

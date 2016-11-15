@@ -38554,7 +38554,7 @@ var Contador = React.createClass({
     return React.createElement(
       'p',
       null,
-      'Numero de movimientos: ',
+      'N\xFAmero de movimientos: ',
       this.props.texto
     );
   }
